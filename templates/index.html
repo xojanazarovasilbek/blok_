@@ -19,6 +19,10 @@
             crossorigin="anonymous"
         />
         <script src="./js/snippet.js"></script>
+        <script>
+            if (window.history.replaceState) {
+            window.history.replaceState( null, null, window.location.href);}
+        </script>
     </head>
 
     <body>
@@ -71,69 +75,59 @@
 
 
                 <div class="d-flex flex-wrap my-3">
+                    {% for cat in categories %}
+
                     <div class="d-flex flex-wrap mx-3 my-2">
                         <button type="button" class="btn btn-primary position-relative">
-                            Inbox
+                            {{cat.name}}
                             <span
                                 class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                99+
+                                {{ cat.posts.all.count }}
                                 <span class="visually-hidden">unread messages</span>
                             </span>
                         </button>
                     </div>
-                    <div class="d-flex flex-wrap mx-3 my-2">
-                        <button type="button" class="btn btn-primary position-relative">
-                            Inbox
-                            <span
-                                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                99+
-                                <span class="visually-hidden">unread messages</span>
-                            </span>
-                        </button>
-                    </div>
-                    <div class="d-flex flex-wrap mx-3 my-2">
-                        <button type="button" class="btn btn-primary position-relative">
-                            Inbox
-                            <span
-                                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                99+
-                                <span class="visually-hidden">unread messages</span>
-                            </span>
-                        </button>
-                    </div>
+                    {% endfor %}
+
+
                 </div>
             </div>
                 <div class="container-md">
                     <div class="row">
                         <div class="col-sm-12 col-md-9">
                           <!-- Post card  -->
+                            {% for post in posts %}
                             <div class="card  mb-3">
                                 <div class="card-body">
                                     <div class="content">
-                                        <a href="./detail.html" class="text-decoration-none"><h4 class="card-title fw-bold">Card title</h4></a>
-                                        <p class="card-text">With supporting text below as a natural lead-in to additional content. Lorem ipsum dolor sit amet consectetur adipisicing elit. Neque ut minima exercitationem tenetur a, tempora facere alias consectetur perspiciatis ex odio repellendus recusandae explicabo suscipit quaerat totam amet dicta officia.</p>
-                                        <span class="badge rounded-pill text-bg-secondary">Secondary</span>
-                                        <span class="badge rounded-pill text-bg-secondary">Secondary</span>
-                                        <span class="badge rounded-pill text-bg-secondary">Secondary</span>
-                                        <span class="badge rounded-pill text-bg-secondary">Secondary</span>
+                                        <a href="{% url 'detail' post.id%}" class="text-decoration-none"><h4 class="card-title fw-bold">
+                                            {{post.title}}</h4></a>
+                                        <p class="card-text">
+                                            {{ post.body|truncatewords:'25'}}
+                                        </p>
+                                        {%for tag in post.tag.all%}
+                                        <span class="badge rounded-pill text-bg-secondary">{{tag.name}}</span>
+                                        {% endfor %}
                                         <br>
                                         <span class="badge bg-primary rounded-pill">
                                           <i class="bi bi-list-stars"></i>
-                                          140
+                                          {{post.ratings.all.count}}
                                       </span>
                                         <span class="badge bg-primary rounded-pill">
-                                          <i class="bi bi-eye"></i> 
-                                          14 
+                                          <i class="bi bi-eye"></i>
+                                            {{post.views.all.count}}
                                     </span>
                                         <span class="badge bg-primary rounded-pill">
                                           <i class="bi bi-chat-square-text"></i>
-                                          14 
+                                            {{post.comments.all.count}}
+
                                     </span>
                                         <a href="#" class="btn btn-secondary float-end">Read</a>
                                     </div>
                                 </div>
                               </div>
                               <!-- End Post card  -->
+                            {% endfor %}
                             <!-- END POST CARDS  -->
                             <!-- PAGINATION  -->
                             <nav aria-label="...">

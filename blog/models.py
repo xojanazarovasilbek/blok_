@@ -24,13 +24,20 @@ class Post(models.Model):
     title = models.CharField(verbose_name="Post_title", max_length=250)
     body = models.TextField(verbose_name="Post title")
     author = models.CharField(verbose_name="author_name", default="admin", max_length=100)
-    category = models.ForeignKey(Category, on_delete=models.PROTECT, related_name='categories')
+    category = models.ForeignKey(Category, on_delete=models.PROTECT, related_name='posts')
     tag = models.ManyToManyField(Tag)
     views = models.PositiveIntegerField(default=0)
     publish_date = models.DateTimeField(verbose_name="Publish_date",auto_now_add=True) 
     published = models.BooleanField(default=True)
     on_top = models.BooleanField(default=False)
 
+    def get_avg_rating(self):
+        sum_ratings = sum([int(i.value) for i in self.ratings.all()])
+        try:
+            rating = sum_ratings / self.ratings.all().count()
+        except ZeroDivisionError:
+            rating = 0
+        return rating
     
     def __str__(self):
         return str(self.title)
